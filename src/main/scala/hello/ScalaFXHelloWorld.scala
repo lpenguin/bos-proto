@@ -25,44 +25,68 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package hello
+
+
+import javafx.util.Callback
+
 import scalafx.application.JFXApp
 import scalafx.application.JFXApp.PrimaryStage
+import scalafx.collections.ObservableBuffer
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
+import scalafx.scene.control.{ListCell, ListView}
 import scalafx.scene.effect.DropShadow
+import scalafx.scene.image.ImageView
 import scalafx.scene.layout.HBox
 import scalafx.scene.paint.Color._
-import scalafx.scene.paint.{Stops, LinearGradient}
+import scalafx.scene.paint.{Color, Stops, LinearGradient}
+import scalafx.scene.shape.Circle
 import scalafx.scene.text.Text
 object ScalaFXHelloWorld extends JFXApp {
+  case class Person(firstName: String, lastName: String) {
+    override def toString = firstName + " " + lastName
+  }
+
+  val characters = ObservableBuffer[Person](
+    Person("Bungalow ", "Bill"),
+    Person("Dennis", "O’Dell"),
+    Person("Eleanor", "Rigby"),
+    Person("Rocky", "Raccoon"),
+    Person("Peggy", "Sue")
+  )
+
+  val factory = new Callback[ListView[String], ListCell[String]]() {
+    def call(p1: ListView[String]): ListCell[String] = ???
+  }
+
+  val c = new ListCell[String]{
+
+  }
+//  {
+//    item.onChange(
+//      (_, _, _) =>
+//        graphic = new Circle {fill = Color.BLUE; radius = 8}
+//    )
+//  }
+
   stage = new PrimaryStage {
-    title = "ScalaFX Hello World"
+    title = "ScalaFX Hello World1"
     scene = new Scene {
       fill = BLACK
-      content = new HBox {
-        padding = Insets(20)
-        content = Seq(
-          new Text {
-            text = "Hello "
-            style = "-fx-font-size: 100pt"
-            fill = new LinearGradient(
-              endX = 0,
-              stops = Stops(PALEGREEN, SEAGREEN))
-          },
-          new Text {
-            text = "World!!!"
-            style = "-fx-font-size: 100pt"
-            fill = new LinearGradient(
-              endX = 0,
-              stops = Stops(CYAN, DODGERBLUE)
-            )
-            effect = new DropShadow {
-              color = DODGERBLUE
-              radius = 25
-              spread = 0.25
+      content = new ListView[String] {
+        items = ObservableBuffer("Fifr", "Fufr")
+        cellFactory = { _ => new ListCell[String]{
+            item.onChange{
+              (_, _, newValue) => {
+                graphic = new ImageView("https://avatars1.githubusercontent.com/u/564449?v=2&s=40"){
+                  fitWidth = 12f
+                  fitHeight = 12f
+                }
+                text = newValue
+              }
             }
           }
-        )
+        }
       }
     }
   }
